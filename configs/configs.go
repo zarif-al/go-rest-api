@@ -12,6 +12,16 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+func EnvMongoDBName() string {
+	err := godotenv.Load()
+
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	return os.Getenv("MONGO_DB_NAME")
+}
+
 func EnvMongoURI() string {
 	err := godotenv.Load()
 
@@ -50,4 +60,14 @@ func ConnectDB() *mongo.Client {
 	fmt.Println("Connected to MongoDB")
 
 	return client
+}
+
+// Client Instance
+var DB *mongo.Client = ConnectDB()
+
+//Getting database collections
+func GetCollection(client *mongo.Client, collectionName string) *mongo.Collection {
+	var MONGO_DB_NAME = EnvMongoDBName()
+	collection := client.Database(MONGO_DB_NAME).Collection(collectionName)
+	return collection
 }
