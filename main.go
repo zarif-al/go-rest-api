@@ -2,7 +2,6 @@ package main
 
 import (
 	"web-services-gin/configs"
-	"web-services-gin/routes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,8 +11,7 @@ func main() {
 
 	configs.ConnectDB()
 
-	//routes
-	routes.AlbumsRoute(router)
+	// Bind the router to each route from routes
 
 	router.Run("localhost:8080")
 }

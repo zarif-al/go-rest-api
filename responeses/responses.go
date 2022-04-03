@@ -1,7 +1,3 @@
 package responses
 
-type AlbumResponse struct {
-	Status  int                    `json:"status"`
-	Message string                 `json:"message"`
-	Data    map[string]interface{} `json:"data"`
-}
+// Package responses contains the response structs for the API.
