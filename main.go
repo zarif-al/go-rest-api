@@ -2,7 +2,7 @@ package main
 
 import (
 	"web-services-gin/configs"
-	"web-services-gin/routes"
+	"web-services-gin/services"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +13,7 @@ func main() {
 	configs.ConnectDB()
 
 	//routes
-	routes.AlbumsRoute(router)
+	services.AlbumServices(router)
 
 	router.Run("localhost:8080")
 }

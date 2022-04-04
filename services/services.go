@@ -1,4 +1,4 @@
-package routes
+package services
 
 import (
 	"web-services-gin/controllers"
@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AlbumsRoute(router *gin.Engine) {
+func AlbumServices(router *gin.Engine) {
 	//All routes related to albums comes here
 	router.POST("/create-album", controllers.CreateAlbum())
 	router.GET("/album/:albumId", controllers.GetAlbum())
