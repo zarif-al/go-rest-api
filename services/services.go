@@ -1,10 +1,10 @@
-package routes
+package services
 
 import (
 	"github.com/gin-gonic/gin"
 )
 
 func AlbumsRoute(router *gin.Engine) {
-	//All routes related to albums comes here
+	//All services related to albums comes here
 
 }
