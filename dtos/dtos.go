@@ -5,3 +5,9 @@ type ResponseDTO struct {
 	Message string                 `json:"message"`
 	Data    map[string]interface{} `json:"data"`
 }
+
+type UpdateAlbum struct {
+	Title  string  `bson:"title,omitempty"`
+	Artist string  `bson:"artist,omitempty"`
+	Price  float64 `bson:"price,omitempty"`
+}
