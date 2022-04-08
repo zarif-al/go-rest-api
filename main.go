@@ -7,20 +7,11 @@ import (
 	"web-services-gin/services"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
-func getPortNumber() string {
-	err := godotenv.Load()
-
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	return os.Getenv("PORT")
-}
-
 func main() {
+	port := os.Getenv("PORT")
+
 	router := gin.Default()
 
 	configs.ConnectDB()
@@ -28,7 +19,7 @@ func main() {
 	//routes
 	services.AlbumServices(router)
 
-	var port = getPortNumber()
+	log.Printf("Running on port %s", port)
 
 	router.Run(":" + port)
 }
