@@ -16,7 +16,7 @@ func EnvMongoDBName() string {
 	err := godotenv.Load()
 
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Println("Error loading .env file")
 	}
 
 	return os.Getenv("MONGO_DB_NAME")
@@ -26,7 +26,7 @@ func EnvMongoURI() string {
 	err := godotenv.Load()
 
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Println("Error loading .env file")
 	}
 
 	return os.Getenv("MONGO_URI")
@@ -37,7 +37,7 @@ func ConnectDB() *mongo.Client {
 	client, err := mongo.NewClient(options.Client().ApplyURI(EnvMongoURI()))
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	// Set up context with timeout for connection
@@ -47,14 +47,14 @@ func ConnectDB() *mongo.Client {
 	err = client.Connect(ctx)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	// Ping DB
 	err = client.Ping(ctx, nil)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	fmt.Println("Connected to MongoDB")
