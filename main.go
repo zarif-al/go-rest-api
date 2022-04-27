@@ -12,6 +12,7 @@ func main() {
 	configs.ConnectDB()
 
 	// Bind the router to each route from routes
+	// services.AlbumServices(router)
 
 	router.Run("localhost:8080")
 }
