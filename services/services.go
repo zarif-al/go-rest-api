@@ -7,8 +7,9 @@ import (
 )
 
 func AlbumsServices(router *gin.Engine) {
-	//All services related to albums comes here
-	// router.GET("/get-album/:albumId", controllers.GetAlbum())
 	router.GET("/get-all-albums", controllers.GetAlbums)
 	router.POST("/create-album", controllers.CreateAlbum)
+	router.GET("/get-album/:id", controllers.GetAlbum)
+	router.PATCH("/update-album/:id", controllers.UpdateAlbum)
+	router.DELETE("/delete-album/:id", controllers.DeleteAlbum)
 }
