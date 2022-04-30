@@ -1,7 +1,20 @@
 package controllers
 
-// Get Collection
+import (
+	"net/http"
+	"web-services-gin/configs"
+	"web-services-gin/models"
 
-// Initilialize Validator
+	"github.com/gin-gonic/gin"
+)
 
-// CRUD Functions
+func GetAlbums(c *gin.Context) {
+	var albums []models.Album
+	if err := configs.DB.Find(&albums).Error; err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	} else {
+		c.JSON(200, albums)
+		return
+	}
+}
