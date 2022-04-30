@@ -4,7 +4,7 @@ package models
 
 type Album struct {
 	ID     uint
-	Title  string
-	Artist string
-	Price  float64
+	Title  string  `json:"title" binding:"required"`
+	Artist string  `json:"artist" binding:"required"`
+	Price  float64 `json:"price" binding:"required"`
 }
