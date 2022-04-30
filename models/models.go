@@ -2,9 +2,9 @@ package models
 
 // Define Model Struct
 
-/* type Album struct {
-	ID     primitive.ObjectID `bson:"_id,omitempty"`
-	Title  string             `bson:"title,omitempty" validate:"required"`
-	Artist string             `bson:"artist,omitempty" validate:"required"`
-	Price  float64            `bson:"price,omitempty" validate:"required"`
-} */
+type Album struct {
+	ID     string  `json:"id" gorm:"primary_key"`
+	Title  string  `json:"title"`
+	Artist string  `json:"artist"`
+	Price  float64 `json:"price"`
+}

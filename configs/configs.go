@@ -1,73 +1,84 @@
 package configs
 
 import (
-	"context"
-	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"github.com/joho/godotenv"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
-func EnvMongoDBName() string {
+func EnvDbName() string {
 	err := godotenv.Load()
 
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	return os.Getenv("MONGO_DB_NAME")
+	return os.Getenv("DATABASE_NAME")
 }
 
-func EnvMongoURI() string {
+func EnvDbUsername() string {
 	err := godotenv.Load()
 
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	return os.Getenv("MONGO_URI")
+	return os.Getenv("DATABASE_USERNAME")
 }
 
-func ConnectDB() *mongo.Client {
+func EnvDbPassword() string {
+	err := godotenv.Load()
+
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	return os.Getenv("DATABASE_PASSWORD")
+}
+
+func EnvDbHost() string {
+	err := godotenv.Load()
+
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	return os.Getenv("DATABASE_HOST")
+}
+
+func EnvDbPort() string {
+	err := godotenv.Load()
+
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	return os.Getenv("DATABASE_PORT")
+}
+
+func ConnectDB() *gorm.DB {
+	var err error
+
+	var DB_USERNAME = EnvDbUsername()
+	var DB_PASSWORD = EnvDbPassword()
+	var DB_HOST = EnvDbHost()
+	var DB_PORT = EnvDbPort()
+	var DB_NAME = EnvDbName()
+
 	// Set up Client
-	client, err := mongo.NewClient(options.Client().ApplyURI(EnvMongoURI()))
+	dsn := DB_USERNAME + ":" + DB_PASSWORD + "@tcp" + "(" + DB_HOST + ":" + DB_PORT + ")/" + DB_NAME + "?" + "charset=utf8mb4&parseTime=true&loc=Local"
+
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Set up context with timeout for connection
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-
-	// Attempt Connection
-	err = client.Connect(ctx)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Ping DB
-	err = client.Ping(ctx, nil)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Connected to MongoDB")
-
-	return client
+	return db
 }
 
 // Client Instance
-var DB *mongo.Client = ConnectDB()
-
-//Getting database collections
-func GetCollection(client *mongo.Client, collectionName string) *mongo.Collection {
-	var MONGO_DB_NAME = EnvMongoDBName()
-	collection := client.Database(MONGO_DB_NAME).Collection(collectionName)
-	return collection
-}
+var DB *gorm.DB = ConnectDB()
