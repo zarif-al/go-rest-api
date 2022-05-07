@@ -61,6 +61,7 @@ func reader(records chan []string, saveLocation string) {
 	defer close(records)
 
 	file, err := os.Open(saveLocation)
+	defer os.Remove(saveLocation)
 
 	if err != nil {
 		log.Fatal(err)
