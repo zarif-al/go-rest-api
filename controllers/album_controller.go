@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"web-services-gin/configs"
+	"web-services-gin/dtos"
 	"web-services-gin/models"
 
 	"github.com/gin-gonic/gin"
@@ -46,6 +47,21 @@ func CreateAlbum(c *gin.Context) {
 		c.JSON(200, album)
 		return
 	}
+}
+
+// Write a insert album function
+
+func InsertAlbum(album models.Album) dtos.ErrorDTO {
+	var newError dtos.ErrorDTO
+	if err := configs.DB.Create(&album).Error; err != nil {
+		newError.Error = true
+		newError.Message = err.Error()
+	} else {
+		newError.Error = false
+		newError.Message = "Album inserted successfully"
+	}
+	return newError
+
 }
 
 func UpdateAlbum(c *gin.Context) {

@@ -14,6 +14,7 @@ func main() {
 
 	// Bind the router to each route from routes
 	services.AlbumsServices(router)
+	services.UploadServices(router)
 
 	router.Run("localhost:8080")
 }

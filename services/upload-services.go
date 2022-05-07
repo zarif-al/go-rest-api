@@ -6,6 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func UploadServieces(router *gin.Engine) {
+func UploadServices(router *gin.Engine) {
 	router.POST("/upload-file", controllers.UploadFile)
 }
