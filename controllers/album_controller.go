@@ -51,9 +51,9 @@ func CreateAlbum(c *gin.Context) {
 
 // Write a insert album function
 
-func InsertAlbum(album models.Album) dtos.ErrorDTO {
+func InsertAlbums(albums []models.Album) dtos.ErrorDTO {
 	var newError dtos.ErrorDTO
-	if err := configs.DB.Create(&album).Error; err != nil {
+	if err := configs.DB.Create(&albums).Error; err != nil {
 		newError.Error = true
 		newError.Message = err.Error()
 	} else {

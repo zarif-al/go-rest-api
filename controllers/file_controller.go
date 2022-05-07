@@ -93,7 +93,7 @@ func uploadAlbums(records chan []string, response chan dtos.UploadFileDTO) {
 
 	defer close(response)
 	var uploadFileResponse dtos.UploadFileDTO
-
+	var albums []models.Album
 	for record := range records {
 
 		album := models.Album{}
@@ -118,11 +118,14 @@ func uploadAlbums(records chan []string, response chan dtos.UploadFileDTO) {
 
 		album.Price = price
 
-		response := InsertAlbum(album)
+		albums = append(albums, album)
 
-		if response.Error {
-			uploadFileResponse.Albums = append(uploadFileResponse.Albums, album)
-		}
+	}
+
+	result := InsertAlbums(albums)
+
+	if result.Error {
+		uploadFileResponse.Albums = albums
 	}
 
 	if len(uploadFileResponse.Albums) > 0 {
