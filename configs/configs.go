@@ -79,7 +79,6 @@ func ConnectDB() *gorm.DB {
 	})
 
 	if err != nil {
-		log.Fatal("Hello")
 		log.Fatal(err)
 	}
 
