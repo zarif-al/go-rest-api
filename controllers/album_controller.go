@@ -1,12 +1,15 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 	"web-services-gin/configs"
 	"web-services-gin/dtos"
 	"web-services-gin/models"
 
+	"github.com/TwiN/go-color"
 	"github.com/gin-gonic/gin"
+	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
 func GetAlbums(c *gin.Context) {
@@ -40,6 +43,13 @@ func CreateAlbum(c *gin.Context) {
 		return
 	}
 
+	id, err := gonanoid.New()
+	if err != nil {
+		log.Println(color.Ize(color.Red, "Error : "+err.Error()))
+	}
+
+	album.ID = id
+
 	if err := configs.DB.Create(&album).Error; err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -48,8 +58,6 @@ func CreateAlbum(c *gin.Context) {
 		return
 	}
 }
-
-// Write a insert album function
 
 func InsertAlbums(albums []models.Album) dtos.ErrorDTO {
 	var newError dtos.ErrorDTO

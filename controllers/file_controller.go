@@ -10,7 +10,9 @@ import (
 	"web-services-gin/dtos"
 	"web-services-gin/models"
 
+	"github.com/TwiN/go-color"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
@@ -76,6 +78,8 @@ func reader(records chan []string, saveLocation string) {
 		panic(err)
 	}
 
+	var lineNumber = 0
+
 	for {
 		record, err := parser.Read()
 		if err == io.EOF {
@@ -84,8 +88,8 @@ func reader(records chan []string, saveLocation string) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		records <- record
-
+		records <- append(record, strconv.Itoa(lineNumber))
+		lineNumber++
 	}
 
 }
@@ -95,41 +99,51 @@ func uploadAlbums(records chan []string, response chan dtos.UploadFileDTO) {
 	defer close(response)
 	var uploadFileResponse dtos.UploadFileDTO
 	var albums []models.Album
-	for record := range records {
+	var validate = validator.New()
 
-		album := models.Album{}
+	var lineNumbers []string
+
+	for record := range records {
 
 		id, err := gonanoid.New()
 		if err != nil {
-			uploadFileResponse.Albums = append(uploadFileResponse.Albums, album)
-			log.Fatal(err)
-			break
+			log.Println(color.Ize(color.Red, "Error : "+err.Error()))
 		}
-
-		album.ID = id
-		album.Title = record[0]
-		album.Artist = record[1]
 
 		price, err := strconv.ParseFloat(record[2], 64)
 		if err != nil {
-			uploadFileResponse.Albums = append(uploadFileResponse.Albums, album)
-			log.Fatal(err)
-			break
+			log.Println(color.Ize(color.Red, "Error : "+err.Error()))
 		}
 
-		album.Price = price
+		album := models.Album{
+			ID:     id,
+			Title:  record[0],
+			Artist: record[1],
+			Price:  price,
+		}
 
-		albums = append(albums, album)
+		// use validator library to validate required fields
+		if validationErr := validate.Struct(&album); validationErr != nil {
+			uploadFileResponse.LineNumbers = append(uploadFileResponse.LineNumbers, record[3])
+			log.Println(color.Ize(color.Red, "Error : "+validationErr.Error()))
+		} else {
+			albums = append(albums, album)
+			lineNumbers = append(lineNumbers, record[3])
+		}
 
 	}
+
+	// TODO: If you want to upload when the albums array reaches a certain length then you have to account for when it can't
+	// reach that length.
 
 	result := InsertAlbums(albums)
 
 	if result.Error {
-		uploadFileResponse.Albums = albums
+		uploadFileResponse.LineNumbers = append(uploadFileResponse.LineNumbers, lineNumbers...)
+		log.Println(color.Ize(color.Red, result.Message))
 	}
 
-	if len(uploadFileResponse.Albums) > 0 {
+	if len(uploadFileResponse.LineNumbers) > 0 {
 		uploadFileResponse.Message = "Some albums were not uploaded"
 	} else {
 		uploadFileResponse.Message = "All albums were uploaded"

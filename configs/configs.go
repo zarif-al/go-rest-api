@@ -9,6 +9,7 @@ import (
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func EnvDbName() string {
@@ -73,9 +74,12 @@ func ConnectDB() *gorm.DB {
 	// Set up Client
 	dsn := DB_USERNAME + ":" + DB_PASSWORD + "@tcp" + "(" + DB_HOST + ":" + DB_PORT + ")/" + DB_NAME + "?" + "charset=utf8mb4&parseTime=true&loc=Local"
 
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		CreateBatchSize: 500, Logger: logger.Default.LogMode(logger.Silent),
+	})
 
 	if err != nil {
+		log.Fatal("Hello")
 		log.Fatal(err)
 	}
 
