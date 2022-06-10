@@ -21,5 +21,5 @@ func main() {
 
 	log.Printf("Running on port %s", port)
 
-	router.Run(":" + port)
+	router.Run("localhost:" + port)
 }
