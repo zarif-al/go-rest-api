@@ -1,0 +1,29 @@
+services:
+ api:
+  build:
+   dockerfile: Dockerfile
+   context: .
+  command: sh -c './wait-for mysql:3306 -- go run main.go'
+  depends_on:
+   - mysql
+  restart: on-failure:10
+  environment:
+   TESTING: "false"
+   DATABASE_HOST: mysql
+   DATABASE_PORT: 3306
+   DATABASE_USERNAME: root
+   DATABASE_PASSWORD: Password
+   DATABASE_NAME: albums-golang
+   PORT: 8080
+  ports:
+   - "8080:8080"
+  expose:
+   - "8080"
+ mysql:
+  image: mysql:8.0
+  restart: always
+  environment:
+   MYSQL_DATABASE: albums-golang
+   MYSQL_ROOT_PASSWORD: Password
+  ports:
+   - "3307:3306"
